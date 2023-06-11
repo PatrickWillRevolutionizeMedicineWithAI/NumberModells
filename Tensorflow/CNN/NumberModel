@@ -9,6 +9,8 @@ from keras.datasets import mnist
 from PIL import Image
 from keras.utils import to_categorical
 
+# -----------------------------
+
 # DATA
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -26,15 +28,20 @@ model.add(layers.MaxPooling2D((2,2)))
 model.add(layers.Conv2D(32,(2,2),activation='relu'))
 model.add(layers.MaxPooling2D((2,2)))
 model.add(layers.Flatten())
-model.add(layers.Dense(128,activation='softmax'))
+model.add(layers.Dense(128,activation='sigmoid'))
+model.add(layers.Dropout(0.25))
+model.add(layers.BatchNormalization())
 model.add(layers.Dense(10,activation='sigmoid'))
 
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train,y_train,epochs=10,batch_size=40)
+model.fit(x_train,y_train,epochs=10,batch_size=80)
 # -----------------------------
 # PREDICTION
 prediction = model.predict(x_test)
 prediction = np.argmax(prediction,axis=1)
+
+test_accuracy = model.evaluate(x_test, y_test)
+print("Test Accuracy:", test_accuracy)
 # -----------------------------
 # SAVE  
 with open('number_model_three', 'wb') as f:
@@ -42,7 +49,7 @@ with open('number_model_three', 'wb') as f:
 # -----------------------------
 # TEST
 while True:
-    index = int(input('Enter a Number between 0 and 9999: '))
+    index = np.random.randint(0,9999)
     prediction_index = prediction[index]
     target_index = np.argmax(y_test[index])
     pixel_values = np.array(x_test[index])
