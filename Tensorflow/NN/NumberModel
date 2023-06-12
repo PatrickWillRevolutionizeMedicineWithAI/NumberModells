@@ -35,10 +35,13 @@ model.fit(x_train, y_train, epochs=1, batch_size=10000)
 prediction = model.predict(x_test)
 prediction = np.argmax(prediction, axis=1)
 
+training_accuracy = model.evaluate(x_test)
+print(training_accuracy)
+
 while True:
     index = np.random.randint(0, 9999)
     prediction_index = prediction[index]
-    target_index = np.argmax(y_test[index])
+    target_index = y_test[index]
     target_label = clothes_list[target_index]
     pixel_values = np.array(x_test[index])
     pixel_values = pixel_values.reshape((28, 28))
