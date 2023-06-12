@@ -1,5 +1,12 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+from tensorflow.keras.datasets import fashion_mnist
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras import layers, models
+
 (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-clothes_list = ['T-shirt/oberteil','Hose','Pullover','Kleid','Mantel','Sandale','Hemd','Turnschuh','Tasche','Stiefelette(Halbhoer Stiefel)']
+clothes_list = ['T-shirt/oberteil', 'Hose', 'Pullover', 'Kleid', 'Mantel', 'Sandale', 'Hemd', 'Turnschuh', 'Tasche', 'Stiefelette(Halbhoer Stiefel)']
 x_train = x_train.reshape((60000, 28, 28, 1))
 x_train = x_train.astype('float32') / 255.0
 x_test = x_test.reshape((10000,28, 28, 1))
@@ -7,40 +14,36 @@ x_test = x_test.astype('float32') / 255.0
 
 y_train = to_categorical(y_train)
 
-
-model = Sequential()
-model.add(layers.Conv2D(32,(2,2),activation='relu',input_shape=(28,28,1)))
+model = models.Sequential()
+model.add(layers.Conv2D(32, (2, 2), activation='relu', input_shape=(28, 28, 1)))
 model.add(layers.BatchNormalization())
 model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.BatchNormalization())
-model.add(layers.Conv2D(32,(2,2),activation='relu'))
+model.add(layers.Conv2D(32, (2, 2), activation='relu'))
 model.add(layers.BatchNormalization())
 model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Flatten())
 model.add(layers.BatchNormalization())
-model.add(layers.Dense(128,activation='sigmoid'))
+model.add(layers.Dense(128, activation='sigmoid'))
 model.add(layers.BatchNormalization())
-model.add(layers.Dense(10,activation='softmax'))
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train,y_train,epochs=1,batch_size=10000)
-
-
+model.add(layers.Dense(10, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=1, batch_size=10000)
 
 prediction = model.predict(x_test)
-prediction = np.argmax(prediction,axis=1)
+prediction = np.argmax(prediction, axis=1)
 
 while True:
-    index = np.random.randint(0,9999)
+    index = np.random.randint(0, 9999)
     prediction_index = prediction[index]
-    clothes_index = np.argmax(clothes_list[prediction_index])
-    target_index = y_test[index]
+    target_index = np.argmax(y_test[index])
     target_label = clothes_list[target_index]
     pixel_values = np.array(x_test[index])
-    pixel_values = pixel_values.reshape((28,28))
+    pixel_values = pixel_values.reshape((28, 28))
     pixel_values = (pixel_values * 255).astype(np.uint8)
     image = Image.fromarray(pixel_values)
-    plt.imshow(image,cmap='Greys')
-    plt.title(f'Prediction: {clothes_index}, Target: {target_label}')
+    plt.imshow(image, cmap='Greys')
+    plt.title(f'Prediction: {clothes_list[prediction_index]}, Target: {target_label}')
     plt.show()
