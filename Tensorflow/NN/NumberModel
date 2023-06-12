@@ -1,3 +1,13 @@
+(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+clothes_list = ['T-shirt/oberteil','Hose','Pullover','Kleid','Mantel','Sandale','Hemd','Turnschuh','Tasche','Stiefelette(Halbhoer Stiefel)']
+x_train = x_train.reshape((60000, 28, 28, 1))
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.reshape((10000,28, 28, 1))
+x_test = x_test.astype('float32') / 255.0
+
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
 model = Sequential()
 model.add(layers.Conv2D(32,(2,2),activation='relu',input_shape=(28,28,1)))
 model.add(layers.BatchNormalization())
@@ -14,37 +24,19 @@ model.add(layers.Dense(128,activation='sigmoid'))
 model.add(layers.BatchNormalization())
 model.add(layers.Dense(10,activation='softmax'))
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train,y_train,epochs=10,batch_size=80)
-
-
-
----------------------------------------
-clothes_list = ['T-shirt/oberteil','Hose','Pullover','Kleid','Mantel','Sandale','Hemd','Turnschuh','Tasche','Stiefelette(Halbhoer Stiefel)']
-
-x_train = x_train.reshape((60000,784))
-x_train = x_train.astype('float32') / 255.0
-x_test = x_test.reshape((10000,784))
-x_test = x_test.astype('float32') / 255.0
-
-model = Sequential()
-model.add(Dense(64,activation='sigmoid',input_shape=(784,)))
-model.add(Dense(64,activation='linear'))
-model.add(Dense(10, activation='softmax'))
-
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train, tf.keras.utils.to_categorical(y_train), epochs=10, batch_size=1)
+model.fit(x_train,y_train,epochs=1,batch_size=800)
 
 prediction = model.predict(x_test)
 prediction = np.argmax(prediction,axis=1)
 
-with open('model_four.pkl', 'wb') as f:
-    pickle.dump(model, f)
+
+
 while True:
     index = int(input('Enter a Number between 0 and 9999: '))
     prediction_index = prediction[index]
     clothes_index = clothes_list[prediction_index]
     target_index = y_test[index]
-    target_label = clothes_list[target_index]
+    target_label = np.argmax(clothes_list[target_index])
     pixel_values = np.array(x_test[index])
     pixel_values = pixel_values.reshape((28,28))
     pixel_values = (pixel_values * 255).astype(np.uint8)
