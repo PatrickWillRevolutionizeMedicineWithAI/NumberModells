@@ -1,3 +1,45 @@
+import tensorflow as tf
+import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
+from keras.datasets import fashion_mnist
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+import pickle
+
+
+(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+# DATEN:
+#       0: T-shirt/oberteil
+#       1: Hose
+#       2: Pullover
+#       3: Kleid
+#       4: Mantel
+#       5: Sandale
+#       6: Hemd
+#       7: Turnschuh
+#       8: Tasche
+#       9: Stiefelette (Halbhoer Stiefel)
+clothes_list = ['T-shirt/oberteil','Hose','Pullover','Kleid','Mantel','Sandale','Hemd','Turnschuh','Tasche','Stiefelette(Halbhoer Stiefel)']
+
+x_train = x_train.reshape((60000,784))
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.reshape((10000,784))
+x_test = x_test.astype('float32') / 255.0
+
+model = Sequential()
+model.add(Dense(64,activation='sigmoid',input_shape=(784,)))
+model.add(Dense(64,activation='linear'))
+model.add(Dense(10, activation='softmax'))
+
+model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+model.fit(x_train, tf.keras.utils.to_categorical(y_train), epochs=1, batch_size=100)
+
+prediction = model.predict(x_test)
+prediction = np.argmax(prediction,axis=1)
+
+with open('model_four.pkl', 'wb') as f:
+    pickle.dump(model, f)
 while True:
     index = int(input('Enter a Number between 0 and 9999: '))
     prediction_index = prediction[index]
