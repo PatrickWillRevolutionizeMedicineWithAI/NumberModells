@@ -36,6 +36,28 @@ prediction = model.predict(x_test)
 prediction = np.argmax(prediction, axis=1)
 
 training_accuracy = model.evaluate(x_test)
+
+
+
+
+
+
+prediction = model.predict(x_test)
+labels = ['Flugzeug', 'Auto', 'Vogel', 'Katze', 'Reh', 'Hund', 'Frosch', 'Pferd', 'Schiff', 'LKW']
+while True:
+  index = np.random.randint(0,9999)
+  prediction_index = np.argmax(prediction[index])
+  prediction_value = labels[prediction_index]
+  target_index = y_test[index]
+  target_index = int(target_index)
+  target_value = labels[target_index]
+  pixel_values = np.array(x_test[index])
+  pixel_values = pixel_values.reshape((32,32,3))
+  pixel_values = (pixel_values * 255).astype(np.uint8)
+  image = Image.fromarray(pixel_values)
+  plt.imshow(image)
+  plt.title(f"Prediction: {prediction_value}, Target: {target_value}")
+  plt.show()
 print(training_accuracy)
 
 while True:
