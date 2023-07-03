@@ -1,80 +1,23 @@
 model = Sequential()
-model.add(layers.Conv2D(32, (2, 2), activation='relu', input_shape=(28, 28, 1)))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.BatchNormalization())
-model.add(layers.Conv2D(32, (2, 2), activation='relu'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Flatten())
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(128, activation='sigmoid'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(10, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=10, batch_size=64)
-
-
-
-###########################################
-model = Sequential()
-model.add(layers.Conv2D(32,(2,2),activation='relu',input_shape=(28, 28, 1)))
+model.add(layers.Conv2D(32,(2,2),activation='relu',input_shape=(28,28,1)))
 model.add(layers.MaxPooling2D((2,2)))
 model.add(layers.Conv2D(32,(2,2),activation='relu'))
 model.add(layers.MaxPooling2D((2,2)))
 model.add(layers.Flatten())
+model.add(layers.Dense(256, activation='sigmoid'))
+model.add(layers.Dropout(0.25))
+model.add(layers.BatchNormalization())
 model.add(layers.Dense(128,activation='sigmoid'))
 model.add(layers.Dropout(0.25))
 model.add(layers.BatchNormalization())
 model.add(layers.Dense(10,activation='sigmoid'))
 
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train,y_train,epochs=10,batch_size=80)
+model.compile(loss='categorical_crossentropy',optimizer='nadam',metrics=['accuracy'])
+model.fit(x_train,y_train,epochs=10,batch_size=80) #80
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
 
-
-
-##########################################
-
-model = Sequential()
-model.add(layers.Conv2D(32, (2, 2), activation='relu', input_shape=(28, 28, 1)))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.BatchNormalization())
-model.add(layers.Conv2D(32, (2, 2), activation='relu'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Flatten())
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(128, activation='sigmoid'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(10, activation='sigmoid'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=10, batch_size=80)#
-
-
-###########################################
-
-model = Sequential()
-model.add(layers.Conv2D(32, (2, 2), activation='relu', input_shape=(28, 28, 1)))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.BatchNormalization())
-model.add(layers.Conv2D(32, (2, 2), activation='relu'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dropout(0.15))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Flatten())
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(128, activation='sigmoid'))
-model.add(layers.BatchNormalization())
-model.add(layers.Dense(10, activation='sigmoid'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=10, batch_size=80)
+print('Test Loss:', test_loss)
+print('Test Accuracy:', test_accuracy)
 
 
 ###########################################
